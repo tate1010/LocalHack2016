@@ -14,7 +14,7 @@ var respond;
 
 function httpGetAsync()
 {
-  var playlist = "PL87wH4-rCdzEmJrzEsWGfnrKwSFwIRpVU"// document.getElementById('textbox_id').value;
+  var playlist = document.getElementById('textbox_id').value;
   function reqListener() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
           response = JSON.parse(xmlHttp.responseText);
