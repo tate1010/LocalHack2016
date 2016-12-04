@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Playlist Loader</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 50px}
+    .row.spacing {height: 30em;}
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+    iframe {
+      width: 640px;
+      height: 360px;
+      position: absolute;
+      display: block;
+      top: 360/2 + 50%;
+      left: 640/2 + 50%;
+    }
+    header{
+      padding: 1em;
+      color: white;
+      background-color: black;
+      clear: left;
+      text-align: center;
+    }
+    footer {
+      padding: 1em;
+      color: white;
+      background-color: black;
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    
+    #backloading {
+      z-index: -1;
+    }
+    #viewing {
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+
+   
+<div><header>Youtube Playlist Loader</header></div>
+
+<div class="row content"></div>
+<div class= "container">
+  <div class="col-xs-1 sidenav"></div>
+  <div class="col-xs-10 text-left"> 
+    <iframe id="backloading"
+      src=""
+      enablejsapi = "true"
+      type="text/javascript">
+    </iframe>
+    <iframe id="viewing"
+      src=""
+      enablejsapi = "true"
+      frameborder="0" type="text/javascript"
+      style="border: solid 4px #37474F">
+   	</iframe>
+  </div>
+  <div class="col-xs-1 sidenav"></div>
+</div>
+<div class="row spacing"></div>
+  <div class="container-fluid text-center">
+    Playlist URL: <input type="text" id="youtubeLink" value="" size= "50" padding="5px">
+    <button type="button" onclick="startPlaylist()"> Submit Playlist</button>
+  </div>
+  <div class="row content"></div>
+<footer class="container-fluid text-center">
+Waterloo Local Hacks 2016
+</footer>
+
+
+
+<script>
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'http://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('viewing', {
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+    });
+  }
+
+  var respond;
+  var playlist = ["https://www.youtube.com/embed/z5r909ThKS8",
+  "https://www.youtube.com/embed/lorElyTn79w",
+  "https://www.youtube.com/embed/EPE_swR1vDc"];
+  
+
+  function onPlayerReady(event) {
+    document.getElementById('viewing').style.borderColor = '#FF6D00';
+  }
+  function changeBorderColor(playerStatus) {
+    var color;
+    if (playerStatus == -1) {
+      color = "#37474F"; // unstarted = gray
+    } else if (playerStatus == 0) {
+      color = "#FFFF00"; // ended = yellow
+    } else if (playerStatus == 1) {
+      color = "#33691E"; // playing = green
+    } else if (playerStatus == 2) {
+      color = "#DD2C00"; // paused = red
+    } else if (playerStatus == 3) {
+      color = "#AA00FF"; // buffering = purple
+    } else if (playerStatus == 5) {
+      color = "#FF6DOO"; // video cued = orange
+    }
+    if (color) {
+      document.getElementById('viewing').style.borderColor = color;
+    }
+  }
+  function onPlayerStateChange(event) {
+    changeBorderColor(event.data);
+    if (player.getPlayerState()==0) {
+      playNext();
+    }
+  }
+
+  function playNext() {
+    var playing = document.getElementById("viewing").z-index;
+    if (z-index==-1) {
+      document.getElementById("viewing").style[z-index] = 0;
+      document.getElementById("backloading").style[z-index] = -1;
+      document.getElementById("backloading").src = playlist[document.getElementById("backloading").value];
+      document.getElementById("backloading").value = document.getElementById("backloading").value + 1;
+    } else {
+      document.getElementById("viewing").style[z-index] = -1;
+      document.getElementById("backloading").style[z-index] = 0;
+      document.getElementById("viewing").src = playlist[document.getElementById("viewing").value];
+      document.getElementById("viewing").value = document.getElementById("viewing").value + 1;
+    }
+  }
+
+  function startPlaylist() {
+    //var link = document.getElementById('youtubeLink').value;
+    //turn playlist to list of videoIDs
+    //httpGetAsync();
+    for(i in playlist) {
+      window.alert(playlist[i]);
+    }
+
+    document.getElementById('viewing').src = playlist[0];
+    document.getElementById('backloading').src = playlist[1];
+    document.getElementById('viewing').value = 0;
+    document.getElementById('backloading').value = 1;
+  }
+
+  /*
+  function httpGetAsync() {
+     var list = document.getElementById('youtubeLink').value;
+  function reqListener() {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+          response = JSON.parse(xmlHttp.responseText);
+          createList();
+  }
+    var xmlHttp = new XMLHttpRequest();
+    var url = "http://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ playlist + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1Ru";
+    xmlHttp.open("GET", url , true); // true for asynchronous
+    xmlHttp.send();
+    xmlHttp.addEventListener("load", reqListener);
+  }
+  function createList() {
+    for(element in response.items){
+      playlist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
+    }
+  }
+  */
+    </script>
+  </body>
+</html>
+
+
+// loadvideobyid then stopsvideo for 2 videos
+//only first video shows up
+//user then play first video
+//once first video finished, second video shows up ontop and plays
+//next video then loads
+//first video dissappears
