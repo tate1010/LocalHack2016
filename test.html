@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Local Hacks Waterloo 2016</title>
+	<link rel="stylesheet" href="bootstrap-4.0.0-alpha.5-dist\css\bootstrap.min.css">
+</head>
+  <body>
+<style type="text/css">
+	
+	header, footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+}
+</style>
+
+
+
+
+<div>
+<header>CTRL+F For Videos</header>
+<iframe id="existing-iframe-example"
+        width="640" height="360"
+        src="https://www.youtube.com/embed/M7lc1UVf-VE?"
+        enablejsapi = "true"
+        frameborder="0" type="text/javascript"
+        style="border: solid 4px #37474F"
+        align="middle">
+	</iframe>
+
+Youtube Link: <input type="text" id="youtubeLink" value="" size= "50">
+Word: <input type="text" id="word" value="">
+<button onclick="changeVideo()"> Change Video</button>
+
+<footer>Copyright © 2016</footer>
+</div>
+<p id="test"> </p>
+
+<script>
+  var tag = document.createElement('script');
+  tag.id = 'iframe-demo';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('existing-iframe-example', {
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+    });
+	}
+  
+
+  function onPlayerReady() {
+  	//player.addEventListener('onStateChange', onPlayerStateChange);
+    document.getElementById('existing-iframe-example').style.borderColor = '#FF6D00';
+  }
+  function changeBorderColor(playerStatus) {
+    var color;
+    if (playerStatus == -1) {
+      color = "#37474F"; // unstarted = gray
+    } else if (playerStatus == 0) {
+      color = "#FFFF00"; // ended = yellow
+    } else if (playerStatus == 1) {
+      color = "#33691E"; // playing = green
+    } else if (playerStatus == 2) {
+      color = "#DD2C00"; // paused = red
+    } else if (playerStatus == 3) {
+      color = "#AA00FF"; // buffering = purple
+    } else if (playerStatus == 5) {
+      color = "#FF6DOO"; // video cued = orange
+    }
+    if (color) {
+      document.getElementById('existing-iframe-example').style.borderColor = color;
+    }
+  }
+  function onPlayerStateChange(event) {
+    window.alert("ts");
+    changeBorderColor(event.data);
+  }
+
+  function changeVideo() {
+  	var newLink = document.getElementById("youtubeLink").value;
+  	//newSrc = newLink.replace("watch?v=", "embed/");
+  	document.getElementById('existing-iframe-example').src = newLink.replace("watch?v=", "embed/");
+  	window.alert("ts");
+  }
+</script>
+  </body>
+</html>
