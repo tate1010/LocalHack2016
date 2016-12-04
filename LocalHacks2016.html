@@ -96,9 +96,16 @@ Waterloo Local Hacks 2016
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  var player;
+  var playerV;
+  var playerB;
   function onYouTubeIframeAPIReady() {
-    player = new YT.Player('viewing', {
+    playerV = new YT.Player('viewing', {
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+    });
+    playerB = new YT.Player('backloading', {
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
@@ -106,10 +113,11 @@ Waterloo Local Hacks 2016
     });
   }
 
-  var respond;
-  var playlist = ["https://www.youtube.com/embed/z5r909ThKS8",
-  "https://www.youtube.com/embed/lorElyTn79w",
-  "https://www.youtube.com/embed/EPE_swR1vDc"];
+  var response;
+  var playlist = ["https://www.youtube.com/embed/dyRRcNRANhU",
+  "https://www.youtube.com/embed/eJInGGAPZgI",
+  "https://www.youtube.com/embed/D5kyjnlDNZs",
+  "https://www.youtube.com/embed/sEQf5lcnj_o"];
   
 
   function onPlayerReady(event) {
@@ -136,6 +144,7 @@ Waterloo Local Hacks 2016
   }
   function onPlayerStateChange(event) {
     changeBorderColor(event.data);
+    window.alert(player.getPlayerState);
     if (player.getPlayerState()==0) {
       playNext();
     }
@@ -159,10 +168,10 @@ Waterloo Local Hacks 2016
   function startPlaylist() {
     //var link = document.getElementById('youtubeLink').value;
     //turn playlist to list of videoIDs
-    //httpGetAsync();
-    for(i in playlist) {
-      window.alert(playlist[i]);
-    }
+    httpGetAsync();
+    //for(i in playlist) {
+    //  window.alert(playlist[i]);
+    //}
 
     document.getElementById('viewing').src = playlist[0];
     document.getElementById('backloading').src = playlist[1];
@@ -170,7 +179,7 @@ Waterloo Local Hacks 2016
     document.getElementById('backloading').value = 1;
   }
 
-  /*
+  
   function httpGetAsync() {
      var list = document.getElementById('youtubeLink').value;
   function reqListener() {
@@ -179,17 +188,18 @@ Waterloo Local Hacks 2016
           createList();
   }
     var xmlHttp = new XMLHttpRequest();
-    var url = "http://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ playlist + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1Ru";
+    var url = "http://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ list + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1Ruu";
     xmlHttp.open("GET", url , true); // true for asynchronous
     xmlHttp.send();
     xmlHttp.addEventListener("load", reqListener);
   }
   function createList() {
     for(element in response.items){
-      playlist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
+      templist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
     }
+    playlist = templist;
   }
-  */
+  
     </script>
   </body>
 </html>
