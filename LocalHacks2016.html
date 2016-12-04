@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
-    
+
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 50px}
     .row.spacing {height: 30em;}
@@ -18,7 +18,7 @@
         height: auto;
         padding: 15px;
       }
-      .row.content {height:auto;} 
+      .row.content {height:auto;}
     }
     iframe {
       width: 640px;
@@ -44,7 +44,7 @@
       bottom: 0;
       width: 100%;
     }
-    
+
     #backloading {
       z-index: -1;
     }
@@ -56,13 +56,13 @@
 <body>
 
 
-   
+
 <div><header>Youtube Playlist Loader</header></div>
 
 <div class="row content"></div>
 <div class= "container">
   <div class="col-xs-1 sidenav"></div>
-  <div class="col-xs-10 text-left"> 
+  <div class="col-xs-10 text-left">
     <iframe id="backloading"
       src=""
       enablejsapi = "true"
@@ -80,7 +80,7 @@
 <div class="row spacing"></div>
   <div class="container-fluid text-center">
     Playlist URL: <input type="text" id="youtubeLink" value="" size= "50" padding="5px">
-    <button type="button" onclick="startPlaylist()"> Submit Playlist</button>
+    <button type="button" onclick="updatelist()"> Submit Playlist</button>
   </div>
   <div class="row content"></div>
 <footer class="container-fluid text-center">
@@ -114,11 +114,8 @@ Waterloo Local Hacks 2016
   }
 
   var response;
-  var playlist = ["https://www.youtube.com/embed/dyRRcNRANhU",
-  "https://www.youtube.com/embed/eJInGGAPZgI",
-  "https://www.youtube.com/embed/D5kyjnlDNZs",
-  "https://www.youtube.com/embed/sEQf5lcnj_o"];
-  
+  var playlist = [];
+
 
   function onPlayerReady(event) {
     document.getElementById('viewing').style.borderColor = '#FF6D00';
@@ -165,10 +162,18 @@ Waterloo Local Hacks 2016
     }
   }
 
+  function updatelist(){
+
+
+      httpGetAsync();
+
+
+      startPlaylist();
+  }
   function startPlaylist() {
-    //var link = document.getElementById('youtubeLink').value;
+
     //turn playlist to list of videoIDs
-    httpGetAsync();
+
     //for(i in playlist) {
     //  window.alert(playlist[i]);
     //}
@@ -179,27 +184,33 @@ Waterloo Local Hacks 2016
     document.getElementById('backloading').value = 1;
   }
 
-  
+
   function httpGetAsync() {
-     var list = document.getElementById('youtubeLink').value;
+    var playlistlink = document.getElementById('youtubeLink').value;
   function reqListener() {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
           response = JSON.parse(xmlHttp.responseText);
-          createList();
+          for(element in response.items){
+            playlist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
+          }
+
+        //  createList();
+        }
   }
     var xmlHttp = new XMLHttpRequest();
-    var url = "http://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ list + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1Ruu";
+    var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ playlistlink + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1RuU";
     xmlHttp.open("GET", url , true); // true for asynchronous
     xmlHttp.send();
     xmlHttp.addEventListener("load", reqListener);
   }
   function createList() {
     for(element in response.items){
-      templist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
+      playlist[element]= "http://www.youtube.com/embed/" + (response.items[element].contentDetails.videoId);
     }
-    playlist = templist;
+
+
   }
-  
+
     </script>
   </body>
 </html>
