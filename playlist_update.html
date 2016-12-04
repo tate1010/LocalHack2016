@@ -1,16 +1,11 @@
 <!doctype html>
 
-
-
 <html lang="en">
 
-<script type='text/javascript' src='config.js'></script>
+
 <script>
-var response;
-
-
-
-
+//window.onload = window.alert("https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=".concat(playlist) + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1RuU");
+var response  ;
 function httpGetAsync()
 {
   var playlist = document.getElementById('textbox_id').value;
@@ -19,23 +14,16 @@ function httpGetAsync()
           response = JSON.parse(xmlHttp.responseText);
           createList();
   }
-
     var xmlHttp = new XMLHttpRequest();
-    var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ playlist + "&key=" + config.MY_KEY;
+    var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+ playlist + "&key=AIzaSyBH44XzDgYZYofiyRws7Ff0RQJ7guE1RuU";
     xmlHttp.open("GET", url , true); // true for asynchronous
     xmlHttp.send();
     xmlHttp.addEventListener("load", reqListener);
-
 }
-
 function createList(){
-
 var playlistarray= [];
 for(element in response.items){
-
-
 playlistarray[element]=(response.items[element].contentDetails.videoId);
-
 }
 for (var i=0; i<50; i++) {
   document.write("<table style=width:100%>");
@@ -44,9 +32,6 @@ for (var i=0; i<50; i++) {
   document.write("</table>")
 }
 }
-
-
-
 </script>
 
 
